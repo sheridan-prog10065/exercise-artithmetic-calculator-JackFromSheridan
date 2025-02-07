@@ -1,12 +1,20 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace MathOperators;
 
 public partial class MainPage : ContentPage
 {
+    
+    //Remembers calculations don by the user.
+    private ObservableCollection<string> _expList;
     public MainPage()
     {
+        _expList = new ObservableCollection<string>();
+        
         InitializeComponent();
+        
+        _lstExpHistory.ItemsSource = _expList;
     }
 
     //OnCalculate event for when the "Calculate" button is pressed.
@@ -24,8 +32,14 @@ public partial class MainPage : ContentPage
         //Perform the Arithmetic Operation and obtain the result.
         double result = PerformOperation(opEntry, leftOperand, rightOperand);
         
-        //Display the result to the user.
-        _txtMathExp.Text = $"{leftOperand} {opEntry} {rightOperand} = {result}";
+        //Display the result to the user and save to history.
+        string expression = $"{leftOperand} {opEntry} {rightOperand} = {result}";
+        _expList.Add(expression);
+        
+        _txtMathExp.Text = expression;
+
+        _lstExpHistory.ItemsSource = null;
+        _lstExpHistory.ItemsSource = _expList;
 
 
     }
